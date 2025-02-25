@@ -42,6 +42,7 @@ extension ReviewCellConfig: TableCellConfig {
         cell.reviewTextLabel.attributedText = reviewText
         cell.reviewTextLabel.numberOfLines = maxLines
         cell.createdLabel.attributedText = created
+        
         cell.config = self
     }
 
@@ -143,6 +144,14 @@ private extension ReviewCell {
         contentView.addSubview(showMoreButton)
         showMoreButton.contentVerticalAlignment = .fill
         showMoreButton.setAttributedTitle(Config.showMoreText, for: .normal)
+        
+        showMoreButton.addTarget(self, action: #selector(showMoreTapped), for: .touchUpInside)
+    }
+    
+    ///Обработчик нажатия на кнопку "Показать больше"
+    @objc func showMoreTapped() {
+        guard let config = config else { return }
+        config.onTapShowMore(config.id)
     }
 
 }

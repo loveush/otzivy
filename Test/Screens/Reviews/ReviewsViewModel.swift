@@ -81,9 +81,7 @@ private extension ReviewsViewModel {
     func makeReviewItem(_ review: Review) -> ReviewItem {
         let userNameString = review.first_name + " " + review.last_name
         let userName = userNameString.attributed(font: .username)
-        
         let ratingImage = ratingRenderer.ratingImage(review.rating)
-        
         let reviewText = review.text.attributed(font: .text)
         let created = review.created.attributed(font: .created, color: .created)
         
@@ -92,7 +90,9 @@ private extension ReviewsViewModel {
             ratingImage: ratingImage,
             reviewText: reviewText,
             created: created,
-            onTapShowMore: showMoreReview
+            onTapShowMore: { [weak self] id in
+                self?.showMoreReview(with: id)
+            }
         )
         return item
     }
