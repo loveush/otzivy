@@ -31,7 +31,7 @@ extension ReviewsViewModel {
 
     typealias State = ReviewsViewModelState
 
-    /// Метод получения отзывов.
+    /// Метод получения отзывов
     func getReviews() {
         guard state.shouldLoad else { return }
         state.shouldLoad = false
@@ -49,7 +49,14 @@ private extension ReviewsViewModel {
         do {
             let data = try result.get()
             let reviews = try decoder.decode(Reviews.self, from: data)
+
+            state.items.removeAll { $0 is CountCellConfig }
             state.items += reviews.items.map(makeReviewItem)
+
+            let totalReviews = setupCountItem(state.items.count)
+            let countCell = CountCellConfig(totalReviews: totalReviews)
+            state.items.append(countCell)
+
             state.offset += state.limit
             state.shouldLoad = state.offset < reviews.count
         } catch {
@@ -96,6 +103,11 @@ private extension ReviewsViewModel {
         )
         return item
     }
+    
+    func setupCountItem(_ count: Int) -> NSAttributedString {
+        let totalReviews = "\(count) items".attributed(font: .created, color: .created)
+        return totalReviews
+    }
 
 }
 
@@ -106,7 +118,7 @@ extension ReviewsViewModel: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         state.items.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let config = state.items[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: config.reuseId, for: indexPath)
@@ -121,7 +133,7 @@ extension ReviewsViewModel: UITableViewDataSource {
 extension ReviewsViewModel: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        state.items[indexPath.row].height(with: tableView.bounds.size)
+        return state.items[indexPath.row].height(with: tableView.bounds.size)
     }
 
     /// Метод дозапрашивает отзывы, если до конца списка отзывов осталось два с половиной экрана по высоте.
