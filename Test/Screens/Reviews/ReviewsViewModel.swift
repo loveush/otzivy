@@ -43,6 +43,15 @@ extension ReviewsViewModel {
             self?.gotReviews(result)
         }
     }
+    
+    func refreshReviews() {
+        state.offset = 0
+        state.items.removeAll()
+        state.shouldLoad = true
+        
+        onStateChange?(state)
+        getReviews()
+    }
 
 }
 

@@ -26,6 +26,7 @@ final class ReviewsViewController: UIViewController {
         super.viewDidLoad()
         setupViewModel()
         viewModel.getReviews()
+        setupBindings()
     }
 
 }
@@ -44,6 +45,19 @@ private extension ReviewsViewController {
     func setupViewModel() {
         viewModel.onStateChange = { [weak reviewsView] _ in
             reviewsView?.tableView.reloadData()
+        }
+    }
+    
+    func setupBindings() {
+        reviewsView.onRefresh = { [weak self] in
+            self?.viewModel.refreshReviews()
+        }
+        
+        viewModel.onStateChange = { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.reviewsView.tableView.reloadData()
+                self?.reviewsView.tableView.refreshControl?.endRefreshing()
+            }
         }
     }
 

@@ -4,6 +4,10 @@ final class ReviewsView: UIView {
 
     // MARK: - UI Components
     let tableView = UITableView()
+    private let refreshControl = UIRefreshControl()
+    
+    /// Замыкание для обновления данных
+    var onRefresh: (() -> Void)?
 
     // MARK: - Initializers
     required init?(coder: NSCoder) {
@@ -30,6 +34,7 @@ private extension ReviewsView {
     func setupView() {
         backgroundColor = .systemBackground
         setupTableView()
+        setupRefreshControl()
     }
 
     func setupTableView() {
@@ -38,6 +43,15 @@ private extension ReviewsView {
         tableView.allowsSelection = false
         tableView.register(ReviewCell.self, forCellReuseIdentifier: ReviewCellConfig.reuseId)
         tableView.register(CountCell.self, forCellReuseIdentifier: CountCellConfig.reuseId)
+    }
+    
+    func setupRefreshControl() {
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+    }
+    
+    @objc func handleRefresh() {
+        onRefresh?()
     }
 
 }
