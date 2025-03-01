@@ -154,13 +154,12 @@
 		21B82E372D47B1090085DAA2 /* Reviews */ = {
 			isa = PBXGroup;
 			children = (
-				A7EAA8F42D72504A00B72E86 /* ImageProvider.swift */,
+				A7ECFF442D737B32000698BE /* Network */,
 				21ED1F642D69D0340012D6F6 /* ReviewsScreenFactory.swift */,
 				21B82E292D47B0640085DAA2 /* ReviewsViewController.swift */,
 				2166A0F32D4A5B25009AAA76 /* ReviewsView.swift */,
 				21B8416C2D47C0E20085DAA2 /* ReviewsViewModelState.swift */,
 				21B82E332D47B0AA0085DAA2 /* ReviewsViewModel.swift */,
-				21B82E352D47B0D80085DAA2 /* ReviewsProvider.swift */,
 				21667B7F2D4A25B2009AAA76 /* RatingRenderer.swift */,
 				216668752D48F39E009AAA76 /* Cells */,
 			);
@@ -191,6 +190,15 @@
 				21ED1F612D69CBCD0012D6F6 /* RootView.swift */,
 			);
 			path = Root;
+			sourceTree = "<group>";
+		};
+		A7ECFF442D737B32000698BE /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				A7EAA8F42D72504A00B72E86 /* ImageProvider.swift */,
+				21B82E352D47B0D80085DAA2 /* ReviewsProvider.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

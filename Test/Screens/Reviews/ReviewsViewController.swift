@@ -2,9 +2,11 @@ import UIKit
 
 final class ReviewsViewController: UIViewController {
 
+    // MARK: - Private properties
     private lazy var reviewsView = makeReviewsView()
     private let viewModel: ReviewsViewModel
 
+    // MARK: - Initializers
     init(viewModel: ReviewsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -14,6 +16,7 @@ final class ReviewsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Override funcs
     override func loadView() {
         view = reviewsView
         title = "Отзывы"

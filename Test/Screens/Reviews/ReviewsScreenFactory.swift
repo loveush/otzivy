@@ -1,11 +1,12 @@
 final class ReviewsScreenFactory {
 
-    /// Создаёт контроллер списка отзывов, проставляя нужные зависимости.
-    func makeReviewsController() -> ReviewsViewController {
+    func makeReviewsViewModel() -> ReviewsViewModel {
         let reviewsProvider = ReviewsProvider()
-        let viewModel = ReviewsViewModel(reviewsProvider: reviewsProvider)
-        let controller = ReviewsViewController(viewModel: viewModel)
-        return controller
+        return ReviewsViewModel(reviewsProvider: reviewsProvider)
+    }
+    
+    func makeReviewsController(viewModel: ReviewsViewModel) -> ReviewsViewController {
+        return ReviewsViewController(viewModel: viewModel)
     }
 
 }
