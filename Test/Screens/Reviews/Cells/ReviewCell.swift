@@ -14,6 +14,8 @@ struct ReviewCellConfig {
     let userName: NSAttributedString
     /// Рейтинг.
     let ratingImage: UIImage
+    /// Фото отзыва.
+    let photoUrls: [String]?
     /// Текст отзыва.
     let reviewText: NSAttributedString
     /// Максимальное отображаемое количество строк текста. По умолчанию 3.
@@ -42,6 +44,28 @@ extension ReviewCellConfig: TableCellConfig {
         cell.reviewTextLabel.attributedText = reviewText
         cell.reviewTextLabel.numberOfLines = maxLines
         cell.createdLabel.attributedText = created
+        
+        /// Удаляем все старые фото, чтобы при переиспользовании ячейки не было наложений
+        cell.photoStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        /// Загружаем новые фото
+        if let photoUrls = photoUrls {
+            for url in photoUrls {
+                let imageView = UIImageView()
+                imageView.contentMode = .scaleAspectFill
+                imageView.layer.cornerRadius = ReviewCellLayout.photoCornerRadius
+                imageView.clipsToBounds = true
+                imageView.widthAnchor.constraint(equalToConstant: ReviewCellLayout.photoSize.width).isActive = true
+                imageView.heightAnchor.constraint(equalToConstant: ReviewCellLayout.photoSize.height).isActive = true
+                
+                /// Асинхронная загрузка
+                ImageProvider.shared.loadImage(from: url) { image in
+                    imageView.image = image
+                }
+                
+                cell.photoStackView.addArrangedSubview(imageView)
+            }
+        }
         
         cell.config = self
     }
@@ -74,6 +98,7 @@ final class ReviewCell: UITableViewCell {
     fileprivate let avatarImageView = UIImageView()
     fileprivate let userNameLabel = UILabel()
     fileprivate let ratingImageView = UIImageView()
+    fileprivate let photoStackView = UIStackView()
     fileprivate let reviewTextLabel = UILabel()
     fileprivate let createdLabel = UILabel()
     fileprivate let showMoreButton = UIButton()
@@ -92,12 +117,14 @@ final class ReviewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         guard let layout = config?.layout else { return }
+        
         avatarImageView.frame = layout.avatarImageViewFrame
         avatarImageView.layer.cornerRadius = ReviewCellLayout.avatarCornerRadius
         avatarImageView.clipsToBounds = true
         
         userNameLabel.frame = layout.userNameLabelFrame
         ratingImageView.frame = layout.ratingImageViewFrame
+        photoStackView.frame = layout.photoStackViewFrame
         reviewTextLabel.frame = layout.reviewTextLabelFrame
         createdLabel.frame = layout.createdLabelFrame
         showMoreButton.frame = layout.showMoreButtonFrame
@@ -113,6 +140,7 @@ private extension ReviewCell {
         setUpAvatar()
         setUpUserName()
         setUpRating()
+        setupPhotoStackView()
         setupReviewTextLabel()
         setupCreatedLabel()
         setupShowMoreButton()
@@ -129,6 +157,14 @@ private extension ReviewCell {
     
     func setUpRating() {
         contentView.addSubview(ratingImageView)
+    }
+    
+    func setupPhotoStackView() {
+        photoStackView.axis = .horizontal
+        photoStackView.spacing = 8.0
+        photoStackView.alignment = .leading
+        
+        contentView.addSubview(photoStackView)
     }
 
     func setupReviewTextLabel() {
@@ -147,13 +183,18 @@ private extension ReviewCell {
         
         showMoreButton.addTarget(self, action: #selector(showMoreTapped), for: .touchUpInside)
     }
+
+}
+
+// MARK: - Tap gestures
+
+private extension ReviewCell {
     
     ///Обработчик нажатия на кнопку "Показать больше"
     @objc func showMoreTapped() {
         guard let config = config else { return }
         config.onTapShowMore(config.id)
     }
-
 }
 
 // MARK: - Layout
@@ -168,8 +209,8 @@ private final class ReviewCellLayout {
     fileprivate static let avatarCornerRadius = 18.0
     fileprivate static let photoCornerRadius = 8.0
 
-    private static let photoSize = CGSize(width: 55.0, height: 66.0)
-    private static let showMoreButtonSize = Config.showMoreText.size()
+    fileprivate static let photoSize = CGSize(width: 55.0, height: 66.0)
+    fileprivate static let showMoreButtonSize = Config.showMoreText.size()
 
     // MARK: - Фреймы
 
@@ -179,6 +220,7 @@ private final class ReviewCellLayout {
     private(set) var reviewTextLabelFrame = CGRect.zero
     private(set) var showMoreButtonFrame = CGRect.zero
     private(set) var createdLabelFrame = CGRect.zero
+    private(set) var photoStackViewFrame = CGRect.zero
 
     // MARK: - Отступы
 
@@ -232,7 +274,22 @@ private final class ReviewCellLayout {
             origin: CGPoint(x: minX, y: maxY),
             size: config.ratingImage.size
         )
-        maxY = ratingImageViewFrame.maxY + ratingToTextSpacing
+        
+        // MARK: - Фото отзыва
+        if let photoUrls = config.photoUrls, !photoUrls.isEmpty {
+            maxY = ratingImageViewFrame.maxY + ratingToPhotosSpacing
+            
+            let totalWidth = CGFloat(photoUrls.count) * Self.photoSize.width + CGFloat(photoUrls.count - 1) * photosSpacing
+            let photoX = minX
+            photoStackViewFrame = CGRect(
+                origin: CGPoint(x: photoX, y: maxY),
+                size: CGSize(width: min(totalWidth, width), height: Self.photoSize.height)
+            )
+            maxY = photoStackViewFrame.maxY + photosToTextSpacing
+        } else {
+            maxY = ratingImageViewFrame.maxY + ratingToTextSpacing
+            photoStackViewFrame = .zero
+        }
         
         // MARK: - Текст отзыва
         if !config.reviewText.isEmpty() {

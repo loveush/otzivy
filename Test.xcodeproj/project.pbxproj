@@ -28,6 +28,7 @@
 		21ED1F622D69CBCD0012D6F6 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21ED1F612D69CBCD0012D6F6 /* RootView.swift */; };
 		21ED1F652D69D0340012D6F6 /* ReviewsScreenFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21ED1F642D69D0340012D6F6 /* ReviewsScreenFactory.swift */; };
 		A7EAA8F12D6E4EEB00B72E86 /* CountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7EAA8F02D6E4EEB00B72E86 /* CountCell.swift */; };
+		A7EAA8F52D72504A00B72E86 /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7EAA8F42D72504A00B72E86 /* ImageProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		21ED1F612D69CBCD0012D6F6 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		21ED1F642D69D0340012D6F6 /* ReviewsScreenFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsScreenFactory.swift; sourceTree = "<group>"; };
 		A7EAA8F02D6E4EEB00B72E86 /* CountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountCell.swift; sourceTree = "<group>"; };
+		A7EAA8F42D72504A00B72E86 /* ImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +154,7 @@
 		21B82E372D47B1090085DAA2 /* Reviews */ = {
 			isa = PBXGroup;
 			children = (
+				A7EAA8F42D72504A00B72E86 /* ImageProvider.swift */,
 				21ED1F642D69D0340012D6F6 /* ReviewsScreenFactory.swift */,
 				21B82E292D47B0640085DAA2 /* ReviewsViewController.swift */,
 				2166A0F32D4A5B25009AAA76 /* ReviewsView.swift */,
@@ -265,6 +268,7 @@
 			files = (
 				21B82E392D47B1320085DAA2 /* Review.swift in Sources */,
 				21B8416D2D47C0E20085DAA2 /* ReviewsViewModelState.swift in Sources */,
+				A7EAA8F52D72504A00B72E86 /* ImageProvider.swift in Sources */,
 				21B82E2E2D47B0640085DAA2 /* ReviewCell.swift in Sources */,
 				21ED1F622D69CBCD0012D6F6 /* RootView.swift in Sources */,
 				21667B802D4A25B2009AAA76 /* RatingRenderer.swift in Sources */,
