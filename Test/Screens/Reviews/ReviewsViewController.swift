@@ -24,7 +24,6 @@ final class ReviewsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViewModel()
         viewModel.getReviews()
         setupBindings()
     }
@@ -41,18 +40,14 @@ private extension ReviewsViewController {
         reviewsView.tableView.dataSource = viewModel
         return reviewsView
     }
-
-    func setupViewModel() {
-        viewModel.onStateChange = { [weak reviewsView] _ in
-            reviewsView?.tableView.reloadData()
-        }
-    }
     
     func setupBindings() {
+        /// Обновление отзывов при pull-to-refresh
         reviewsView.onRefresh = { [weak self] in
             self?.viewModel.refreshReviews()
         }
         
+        /// Setup viewModel
         viewModel.onStateChange = { [weak self] _ in
             DispatchQueue.main.async {
                 self?.reviewsView.tableView.reloadData()
