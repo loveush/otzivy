@@ -24,7 +24,6 @@ final class ReviewsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.getReviews()
         setupBindings()
     }
 

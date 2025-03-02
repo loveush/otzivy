@@ -3,9 +3,9 @@ import UIKit
 final class RootView: UIView {
 
     private let reviewsButton = UIButton(type: .system)
-    private let activityIndicator = UIActivityIndicatorView(style: .medium)
     private let onTapReviews: () -> Void
 
+    private let loadingIndicator = CustomIndicatorView()
     
     init(onTapReviews: @escaping () -> Void) {
         self.onTapReviews = onTapReviews
@@ -24,9 +24,11 @@ final class RootView: UIView {
 extension RootView {
     func showLoadingIndicator(_ show: Bool) {
         if show {
-            activityIndicator.startAnimating()
+            loadingIndicator.isHidden = false
+            loadingIndicator.startAnimating()
         } else {
-            activityIndicator.stopAnimating()
+            loadingIndicator.isHidden = true
+            loadingIndicator.stopAnimating()
         }
     }
 }
@@ -38,7 +40,7 @@ private extension RootView {
     func setupView() {
         backgroundColor = .systemBackground
         setupReviewsButton()
-        setupActivityIndicator()
+        setupLoadingIndicator()
     }
 
     /// Кнопка "Отзывы"
@@ -57,16 +59,18 @@ private extension RootView {
         ])
     }
     
-    /// Индикатор загрузки первого запроса отзывов
-    func setupActivityIndicator() {
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.hidesWhenStopped = true
-        addSubview(activityIndicator)
+    /// Индиктор загрузки
+    func setupLoadingIndicator() {
+        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        loadingIndicator.isHidden = true
+        addSubview(loadingIndicator)
         
         NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: reviewsButton.centerXAnchor),
-            activityIndicator.topAnchor.constraint(equalTo: reviewsButton.bottomAnchor, constant: 8)
+            loadingIndicator.centerXAnchor.constraint(equalTo: reviewsButton.centerXAnchor),
+            loadingIndicator.topAnchor.constraint(equalTo: reviewsButton.bottomAnchor, constant: 30),
+            loadingIndicator.widthAnchor.constraint(equalToConstant: 30),
+            loadingIndicator.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
-
+    
 }

@@ -15,22 +15,21 @@ final class RootViewController: UIViewController {
 private extension RootViewController {
 
     private func openReviews() {
-        /// Сразу показываем индикатор
-        rootView.showLoadingIndicator(true)
-        
-        DispatchQueue.main.async {
-            let factory = ReviewsScreenFactory()
-            let viewModel = factory.makeReviewsViewModel()
-            
-            /// Подписываемся на обновления состояния загрузки для управления индикатором
-            viewModel.onLoadingChange = { [weak self] isLoading in
-                self?.rootView.showLoadingIndicator(isLoading)
-            }
-            
-            let controller = factory.makeReviewsController(viewModel: viewModel)
-            self.navigationController?.pushViewController(controller, animated: true)
+        let factory = ReviewsScreenFactory()
+        let viewModel = factory.makeReviewsViewModel()
+
+        /// Подписываемся на изменения загрузки
+        viewModel.onLoadingChange = { [weak self] isLoading in
+            self?.rootView.showLoadingIndicator(isLoading)
         }
         
+        viewModel.getReviews()
+        viewModel.onStateChange = { [weak self] state in
+            DispatchQueue.main.async {
+                let controller = factory.makeReviewsController(viewModel: viewModel)
+                self?.navigationController?.pushViewController(controller, animated: true)
+            }
+        }
     }
 
 }
